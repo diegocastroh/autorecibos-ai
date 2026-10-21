@@ -1,0 +1,141 @@
+{
+  "systemName": "AutoRecibos AI",
+  "currency": "PEN",
+  "currencySymbol": "S/",
+  "timezone": "America/Lima",
+  "schedule": {
+    "dailyHourPeru": "08:00",
+    "sendOnNewBill": true,
+    "sendReminderDaysBeforeDue": [3, 1],
+    "autoMarkPaidAfterDue": false
+  },
+  "paymentInfo": {
+    "collectorName": "Diego (Administrador)",
+    "yapeNumber": "999-888-777",
+    "plinNumber": "999-888-777",
+    "bankAccount": "BCP Soles: 191-00000000-0-00",
+    "cci": "00219110000000000050",
+    "footerNote": "Por favor enviar la captura del Yape/Plin o transferencia a este mismo grupo para registrarlo. ¡Gracias! 🙌"
+  },
+  "whatsapp": {
+    "activeProvider": "baileys",
+    "defaultGroupJid": "120363000000000001@g.us",
+    "defaultGroupName": "Casa Familiar - Recibos",
+    "greenApi": {
+      "apiUrl": "https://api.green-api.com",
+      "idInstance": "",
+      "apiTokenInstance": ""
+    },
+    "callmebot": {
+      "phone": "",
+      "apiKey": ""
+    },
+    "webhook": {
+      "url": "",
+      "secretHeader": ""
+    }
+  },
+  "email": {
+    "enabled": true,
+    "host": "imap.gmail.com",
+    "port": 993,
+    "secure": true,
+    "lookbackDays": 15,
+    "searchKeywords": [
+      "sedapal",
+      "pluz",
+      "enel",
+      "luz del sur",
+      "calidda",
+      "cálidda",
+      "win",
+      "claro",
+      "movistar",
+      "recibo",
+      "facturación"
+    ]
+  },
+  "googleSheets": {
+    "enabled": false,
+    "csvConfigUrl": "",
+    "appsScriptWebhookUrl": ""
+  },
+  "services": [
+    {
+      "id": "sedapal",
+      "code": "SEDAPAL",
+      "name": "Sedapal (Agua y Alcantarillado)",
+      "icon": "💧",
+      "enabled": true,
+      "supplyNumber": "5028332-4",
+      "senderKeywords": ["sedapal", "agua", "servicio de agua"],
+      "whatsappGroup": {
+        "name": "Casa Familiar - Agua y Luz",
+        "jid": "120363000000000001@g.us"
+      },
+      "fixedFee": 0,
+      "members": [
+        { "id": "m1", "name": "Piso 1 (Familia Principal)", "percentage": 45, "phone": "51999111222" },
+        { "id": "m2", "name": "Piso 2 (Departamento A)", "percentage": 30, "phone": "51999333444" },
+        { "id": "m3", "name": "Piso 3 (Departamento B)", "percentage": 25, "phone": "51999555666" }
+      ]
+    },
+    {
+      "id": "pluz",
+      "code": "PLUZ",
+      "name": "Pluz Energía / Luz",
+      "icon": "⚡",
+      "enabled": true,
+      "supplyNumber": "1194649",
+      "senderKeywords": ["pluz", "enel", "luz del sur", "energía", "electricidad"],
+      "whatsappGroup": {
+        "name": "Casa Familiar - Agua y Luz",
+        "jid": "120363000000000001@g.us"
+      },
+      "fixedFee": 0,
+      "members": [
+        { "id": "m1", "name": "Piso 1 (Familia Principal)", "percentage": 40, "phone": "51999111222" },
+        { "id": "m2", "name": "Piso 2 (Departamento A)", "percentage": 35, "phone": "51999333444" },
+        { "id": "m3", "name": "Piso 3 (Departamento B)", "percentage": 25, "phone": "51999555666" }
+      ]
+    },
+    {
+      "id": "calidda",
+      "code": "CALIDDA",
+      "name": "Cálidda (Gas Natural)",
+      "icon": "🔥",
+      "enabled": true,
+      "supplyNumber": "8841209",
+      "senderKeywords": ["calidda", "cálidda", "gas natural"],
+      "whatsappGroup": {
+        "name": "Grupo Gas Natural Casa",
+        "jid": "120363000000000002@g.us"
+      },
+      "fixedFee": 0,
+      "members": [
+        { "id": "m1", "name": "Piso 1 (Cocina + Terma)", "percentage": 50, "phone": "51999111222" },
+        { "id": "m2", "name": "Piso 2 (Cocina + Terma)", "percentage": 30, "phone": "51999333444" },
+        { "id": "m3", "name": "Piso 3 (Cocina)", "percentage": 20, "phone": "51999555666" }
+      ]
+    },
+    {
+      "id": "internet",
+      "code": "INTERNET",
+      "name": "Internet Fibra (Win / Claro / Movistar)",
+      "icon": "🌐",
+      "enabled": true,
+      "supplyNumber": "WIN-904512",
+      "senderKeywords": ["win", "claro", "movistar", "internet", "fibra", "telefónica", "entel", "wow"],
+      "whatsappGroup": {
+        "name": "Grupo Internet Fibra",
+        "jid": "120363000000000003@g.us"
+      },
+      "fixedFee": 0,
+      "members": [
+        { "id": "m1", "name": "Diego (Oficina / Piso 1)", "percentage": 40, "phone": "51999111222" },
+        { "id": "m2", "name": "Carlos (Piso 2)", "percentage": 30, "phone": "51999333444" },
+        { "id": "m3", "name": "Lucía (Piso 3)", "percentage": 30, "phone": "51999555666" }
+      ]
+    }
+  ]
+}

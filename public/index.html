@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoRecibos AI — Distribución Inteligente por % y Envío a WhatsApp</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo">🧾</div>
+        <div>
+          <h1>AutoRecibos AI</h1>
+          <p>Distribución 100% Automática por % (Sedapal, Pluz, Cálidda, Internet) + Envío Diario a WhatsApp</p>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <span id="badgeAi" class="badge ok">🤖 IA Gemini 3.8 + Parser Perú</span>
+        <span id="badgeEmail" class="badge warn">📧 IMAP: Pendiente</span>
+        <button id="btnOpenWhatsappModal" class="btn btn-outline btn-sm" type="button">
+          📲 <span id="waStatusLabel">Vincular WhatsApp QR</span>
+        </button>
+        <button id="btnRunDemo" class="btn btn-blue btn-sm" type="button">
+          ⚡ Simular Ciclo Diario (4 Recibos)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="tabs-nav" aria-label="Secciones principales">
+      <button class="tab-btn active" data-tab="tab-services" type="button">
+        📐 1. Servicios, Grupos y % de Distribución
+      </button>
+      <button class="tab-btn" data-tab="tab-analyzer" type="button">
+        📤 2. Subir / Probar Recibo (PDF, Foto o Texto)
+      </button>
+      <button class="tab-btn" data-tab="tab-history" type="button">
+        🗂️ 3. Historial de Recibos y Pagos
+      </button>
+      <button class="tab-btn" data-tab="tab-cloud" type="button">
+        ☁️ 4. Medios de Pago y Nube Gratuita (GitHub / Google)
+      </button>
+    </nav>
+
+    <!-- TAB 1: SERVICIOS Y PORCENTAJES -->
+    <section id="tab-services" class="tab-panel active">
+      <div class="toolbar-bar">
+        <div>
+          <strong>Configuración de Porcentajes (%) por Servicio y Grupo de WhatsApp</strong>
+          <p style="font-size: 0.82rem; color: var(--text-secondary);">
+            Ajusta el porcentaje de cada integrante o departamento. El motor matemático garantiza exactitud al céntimo (S/ 0.01).
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+          <button id="btnOpenNewServiceModal" class="btn btn-outline" type="button">
+            ➕ Agregar Otro Servicio
+          </button>
+          <button id="btnSaveAllConfig" class="btn btn-primary" type="button">
+            💾 Guardar Cambios
+          </button>
+        </div>
+      </div>
+
+      <div id="servicesGrid" class="services-grid"></div>
+    </section>
+
+    <!-- TAB 2: SUBIR / ANALIZAR RECIBO -->
+    <section id="tab-analyzer" class="tab-panel">
+      <div class="analyzer-layout">
+        <div class="service-card">
+          <h3>📤 Subir Recibo (PDF / Imagen) o Pegar Correo</h3>
+          <p style="font-size: 0.83rem; color: var(--text-secondary);">
+            Sube un PDF o captura de Sedapal, Pluz, Cálidda o Internet, o carga un ejemplo con 1 clic para ver el cálculo exacto y enviarlo por WhatsApp.
+          </p>
+
+          <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
+            <button class="btn btn-outline btn-sm sample-btn" data-sample="SEDAPAL" type="button">💧 Ejemplo Sedapal</button>
+            <button class="btn btn-outline btn-sm sample-btn" data-sample="PLUZ" type="button">⚡ Ejemplo Pluz Luz</button>
+            <button class="btn btn-outline btn-sm sample-btn" data-sample="CALIDDA" type="button">🔥 Ejemplo Cálidda</button>
+            <button class="btn btn-outline btn-sm sample-btn" data-sample="INTERNET" type="button">🌐 Ejemplo Win Internet</button>
+          </div>
+
+          <div class="field-group">
+            <label for="analyzerServiceSelect">Servicio (Detección Automática o Forzar):</label>
+            <select id="analyzerServiceSelect">
+              <option value="">🔍 Detectar Automáticamente (Sedapal / Pluz / Cálidda / Internet)</option>
+            </select>
+          </div>
+
+          <label class="dropzone" for="analyzerFileInput">
+            <input id="analyzerFileInput" type="file" accept=".pdf,image/*" style="display: none;" />
+            <div style="font-size: 1.8rem; margin-bottom: 0.3rem;">📄</div>
+            <div id="dropzoneFileName" style="font-weight: 600;">
+              Haz clic aquí para seleccionar un PDF o Imagen del recibo
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">
+              Soporta PDFs digitales de correo o fotos de recibos físicos (máx. 15 MB)
+            </div>
+          </label>
+
+          <div class="field-group">
+            <label for="analyzerTextInput">O pega el texto / contenido del correo del recibo:</label>
+            <textarea id="analyzerTextInput" rows="6" placeholder="Ej: SEDAPAL Suministro N° 5028332-4 Total a Pagar: S/ 148.60 Fecha de Vencimiento: 28/10/2026..."></textarea>
+          </div>
+
+          <button id="btnAnalyzeBill" class="btn btn-primary" type="button">
+            🧮 Analizar Recibo y Calcular Distribución por %
+          </button>
+        </div>
+
+        <div class="service-card">
+          <h3>📲 Vista Previa del Desglose y Mensaje WhatsApp</h3>
+          <div id="analysisResultMeta" style="font-size: 0.84rem; color: var(--text-secondary);">
+            Analiza un recibo o selecciona un botón de ejemplo para ver el desglose porcentual y el mensaje listo para WhatsApp.
+          </div>
+
+          <div id="analysisSharesTable" class="table-wrap" style="display: none;"></div>
+
+          <div class="whatsapp-preview">
+            <div style="font-size: 0.76rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+              <span id="previewGroupTarget">Grupo destino: Casa Familiar</span>
+              <span>Vista Previa WhatsApp</span>
+            </div>
+            <div id="whatsappBubblePreview" class="whatsapp-bubble">Aquí aparecerá el mensaje formateado con los porcentajes (%) de cada integrante...</div>
+          </div>
+
+          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+            <button id="btnCopyWhatsappMsg" class="btn btn-outline" type="button" disabled>
+              📋 Copiar Mensaje
+            </button>
+            <button id="btnSendSimulated" class="btn btn-blue" type="button" disabled>
+              🧪 Registrar y Simular Envío
+            </button>
+            <button id="btnSendRealWhatsapp" class="btn btn-primary" type="button" disabled>
+              📲 Enviar Ahora al Grupo de WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: HISTORIAL DE RECIBOS -->
+    <section id="tab-history" class="tab-panel">
+      <div class="toolbar-bar">
+        <div>
+          <strong>Historial de Recibos Procesados y Estado de Cobranza</strong>
+          <p style="font-size: 0.82rem; color: var(--text-secondary);">
+            El sistema guarda la huella de cada recibo para no duplicar cobros y envía recordatorios automáticos antes del vencimiento si sigue pendiente.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.6rem;">
+          <button id="btnScanRealImap" class="btn btn-primary" type="button">
+            📧 Escanear Bandeja de Correo (IMAP)
+          </button>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Servicio</th>
+                <th>Recibo / Periodo</th>
+                <th>Vencimiento</th>
+                <th>Total</th>
+                <th>Distribución (%)</th>
+                <th>Grupo WhatsApp</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="billsHistoryBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: MEDIOS DE PAGO Y NUBE GRATUITA -->
+    <section id="tab-cloud" class="tab-panel">
+      <div class="analyzer-layout">
+        <div class="service-card">
+          <h3>🏦 Medios de Pago y Recordatorios Automáticos</h3>
+          <p style="font-size: 0.82rem; color: var(--text-secondary);">
+            Estos datos aparecen al pie de cada mensaje de WhatsApp enviado a los grupos.
+          </p>
+
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label for="payCollectorName">Nombre del Recaudador / Titular</label>
+              <input id="payCollectorName" type="text" />
+            </div>
+            <div class="field-group">
+              <label for="payYape">Número de Yape</label>
+              <input id="payYape" type="text" />
+            </div>
+            <div class="field-group">
+              <label for="payPlin">Número de Plin</label>
+              <input id="payPlin" type="text" />
+            </div>
+            <div class="field-group">
+              <label for="payBank">Cuenta Bancaria (BCP / Interbank / BBVA)</label>
+              <input id="payBank" type="text" />
+            </div>
+            <div class="field-group">
+              <label for="payCci">Código Interbancario (CCI)</label>
+              <input id="payCci" type="text" />
+            </div>
+            <div class="field-group">
+              <label for="schedReminders">Recordar días antes de vencer (separados por coma)</label>
+              <input id="schedReminders" type="text" placeholder="3, 1" />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="payFooterNote">Nota final en el mensaje de WhatsApp</label>
+            <input id="payFooterNote" type="text" />
+          </div>
+
+          <hr style="border: none; border-top: 1px solid var(--border-color);" />
+
+          <h3>📊 Sincronización Opcional con Google Sheets</h3>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">
+            Si deseas editar los porcentajes desde una hoja de cálculo de Google Sheets en vez del panel, pega aquí el enlace CSV público de tu hoja.
+          </p>
+          <div class="field-group">
+            <label for="gsCsvUrl">URL CSV de Google Sheets (Archivo &rarr; Compartir &rarr; Publicar en la web &rarr; CSV)</label>
+            <input id="gsCsvUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv" />
+          </div>
+
+          <button id="btnSavePaymentAndCloud" class="btn btn-primary" type="button">
+            💾 Guardar Medios de Pago y Preferencias
+          </button>
+        </div>
+
+        <div class="service-card">
+          <h3>☁️ Ejecución 100% Gratuita Todos los Días en la Nube</h3>
+          <p style="font-size: 0.84rem; color: var(--text-secondary);">
+            Este proyecto incluye dos motores gratuitos listos para correr todos los días sin pagar servidores:
+          </p>
+
+          <div class="quick-calc-box">
+            <strong>Opción A (Recomendada): GitHub Actions Cron Diario (`.github/workflows/daily-recibos.yml`)</strong>
+            <p style="margin-top: 0.35rem; color: var(--text-secondary);">
+              Se ejecuta automáticamente todos los días a las 08:00 AM (Hora Perú). Solo sube este repositorio a tu cuenta de GitHub y agrega estos 4 Secrets en <em>Settings &rarr; Secrets and variables &rarr; Actions</em>:
+            </p>
+            <ul style="margin: 0.5rem 0 0 1.2rem; font-size: 0.82rem;">
+              <li><code>EMAIL_USER</code>: Tu correo Gmail (ej. <code>tucorreo@gmail.com</code>)</li>
+              <li><code>EMAIL_PASS</code>: Contraseña de Aplicación de Google de 16 letras</li>
+              <li><code>GEMINI_API_KEY</code>: Tu llave gratuita de Google AI Studio (opcional, tiene fallback automático)</li>
+              <li><code>WHATSAPP_SESSION_BASE64</code>: Tu sesión vinculada por QR (obténla en el botón <strong>📲 Vincular WhatsApp QR</strong> de arriba)</li>
+            </ul>
+          </div>
+
+          <div class="quick-calc-box" style="margin-top: 0.5rem;">
+            <strong>Opción B: Google Apps Script Nativo (`cloud/google-apps-script.gs`)</strong>
+            <p style="margin-top: 0.35rem; color: var(--text-secondary);">
+              Corre directamente dentro de tu cuenta de Google (lee tu Gmail directamente sin contraseñas IMAP y guarda en Google Sheets todos los días gratis).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- DIALOG MODAL 1: VINCULAR WHATSAPP QR / CONFIGURAR BOT -->
+  <dialog id="whatsappDialog">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3>📲 Conexión de WhatsApp (Número Propio QR o Bot Gratuito)</h3>
+      <button id="btnCloseWhatsappDialog" class="btn btn-outline btn-sm" type="button">✕ Cerrar</button>
+    </div>
+
+    <div class="field-group" style="margin-bottom: 1rem;">
+      <label for="waProviderSelect">Motor de Envío de WhatsApp:</label>
+      <select id="waProviderSelect">
+        <option value="baileys">1. Número Propio Logueado vía Código QR (Baileys - Envía a Grupos y Contactos)</option>
+        <option value="green-api">2. Green-API (Plan Developer Gratis en la Nube - Envía a Grupos @g.us)</option>
+        <option value="callmebot">3. CallMeBot (Bot Gratuito por API Key)</option>
+      </select>
+    </div>
+
+    <div id="waBaileysSection" class="members-list" style="margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+          <strong>Estado QR:</strong> <span id="waModalStateText">Desconectado</span>
+        </div>
+        <div style="display: flex; gap: 0.45rem;">
+          <button id="btnStartQr" class="btn btn-primary btn-sm" type="button">🔄 Generar QR / Conectar</button>
+          <button id="btnLogoutWa" class="btn btn-danger btn-sm" type="button">Cerrar Sesión</button>
+        </div>
+      </div>
+
+      <div id="waQrContainer" style="text-align: center; padding: 1rem 0; display: none;">
+        <img id="waQrImg" alt="Código QR de WhatsApp" style="border-radius: 10px; max-width: 240px;" />
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.4rem;">
+          Abre WhatsApp en tu teléfono &rarr; Dispositivos vinculados &rarr; Vincular un dispositivo.
+        </p>
+      </div>
+
+      <div style="margin-top: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <label style="font-size: 0.8rem; font-weight: 600;">Grupos de WhatsApp detectados en tu número:</label>
+          <button id="btnRefreshGroups" class="btn btn-outline btn-sm" type="button">🔍 Listar Grupos</button>
+        </div>
+        <div id="waGroupsList" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.4rem; max-height: 140px; overflow-y: auto;">
+          Conecta tu WhatsApp para listar los JIDs (@g.us) de tus grupos automáticamente.
+        </div>
+      </div>
+
+      <div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--border-color);">
+        <button id="btnExportSessionBase64" class="btn btn-blue btn-sm" type="button" style="width: 100%;">
+          🔐 Copiar WHATSAPP_SESSION_BASE64 para GitHub Actions
+        </button>
+      </div>
+    </div>
+
+    <div id="waGreenApiSection" class="members-list" style="display: none; margin-bottom: 1rem;">
+      <div class="field-group">
+        <label for="greenIdInstance">Green-API idInstance (Gratis en green-api.com)</label>
+        <input id="greenIdInstance" type="text" placeholder="Ej: 7103000000" />
+      </div>
+      <div class="field-group">
+        <label for="greenApiToken">Green-API apiTokenInstance</label>
+        <input id="greenApiToken" type="text" placeholder="Tu token de instancia" />
+      </div>
+    </div>
+
+    <div id="waCallMeBotSection" class="members-list" style="display: none; margin-bottom: 1rem;">
+      <div class="field-group">
+        <label for="cmbPhone">Teléfono con código de país (Ej: 51999888777)</label>
+        <input id="cmbPhone" type="text" />
+      </div>
+      <div class="field-group">
+        <label for="cmbApiKey">CallMeBot API Key</label>
+        <input id="cmbApiKey" type="text" />
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+      <button id="btnSaveWaSettings" class="btn btn-primary btn-sm" type="button">💾 Guardar Motor WhatsApp</button>
+    </div>
+  </dialog>
+
+  <!-- DIALOG MODAL 2: AGREGAR NUEVO SERVICIO -->
+  <dialog id="newServiceDialog">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <h3>➕ Agregar Nuevo Servicio al Sistema</h3>
+      <button id="btnCloseNewServiceDialog" class="btn btn-outline btn-sm" type="button">✕</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label for="newSvcName">Nombre del Servicio</label>
+          <input id="newSvcName" type="text" placeholder="Ej: Arbitrios / Mantenimiento / Netflix" />
+        </div>
+        <div class="field-group">
+          <label for="newSvcCode">Código Corto</label>
+          <input id="newSvcCode" type="text" placeholder="Ej: MANTENIMIENTO" />
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="field-group">
+          <label for="newSvcIcon">Ícono (Emoji)</label>
+          <input id="newSvcIcon" type="text" value="🏢" />
+        </div>
+        <div class="field-group">
+          <label for="newSvcSupply">N° Suministro / Contrato</label>
+          <input id="newSvcSupply" type="text" placeholder="Opcional" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label for="newSvcKeywords">Palabras clave en el correo (separadas por coma)</label>
+        <input id="newSvcKeywords" type="text" placeholder="mantenimiento, junta de propietarios, arbitrios" />
+      </div>
+      <button id="btnConfirmAddService" class="btn btn-primary" type="button">Crear Servicio</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="./app.js" type="module"></script>
+</body>
+</html>

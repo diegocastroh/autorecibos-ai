@@ -1,0 +1,71 @@
+name: 🤖 AutoRecibos AI - Ejecución Diaria de Recibos y WhatsApp
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 08:00 AM Hora Perú (13:00 UTC)
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      demo_mode:
+        description: 'Ejecutar con recibos de prueba (Sedapal, Pluz, Cálidda, Internet)'
+        required: false
+        default: false
+        type: boolean
+      force_resend:
+        description: 'Forzar reenvío aunque el recibo ya haya sido procesado antes'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  procesar-y-enviar-recibos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configurar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: 📦 Instalar dependencias
+        run: npm ci
+
+      - name: 🧾 Escanear recibos, calcular % y enviar a grupos de WhatsApp
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST || 'imap.gmail.com' }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT || '993' }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          WHATSAPP_PROVIDER: ${{ secrets.WHATSAPP_PROVIDER || 'baileys' }}
+          WHATSAPP_SESSION_BASE64: ${{ secrets.WHATSAPP_SESSION_BASE64 }}
+          GREEN_API_ID_INSTANCE: ${{ secrets.GREEN_API_ID_INSTANCE }}
+          GREEN_API_TOKEN: ${{ secrets.GREEN_API_TOKEN }}
+          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+          GOOGLE_SHEETS_CSV_URL: ${{ secrets.GOOGLE_SHEETS_CSV_URL }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.demo_mode }}" = "true" ]; then
+            ARGS="$ARGS --demo"
+          fi
+          if [ "${{ github.event.inputs.force_resend }}" = "true" ]; then
+            ARGS="$ARGS --force"
+          fi
+          node src/cli/dailyRunner.js $ARGS
+
+      - name: 💾 Guardar historial de recibos procesados en el repositorio
+        run: |
+          git config user.name "AutoRecibos AI Bot"
+          git config user.email "bot@autorecibos.local"
+          git add data/processed_bills.json data/config.json
+          git diff --staged --quiet || git commit -m "chore(recibos): actualizar registro diario de recibos procesados [skip ci]"
+          git push

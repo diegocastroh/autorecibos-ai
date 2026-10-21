@@ -1,0 +1,39 @@
+{
+  "name": "autorecibos-ai",
+  "version": "1.0.0",
+  "description": "Sistema inteligente 100% automático y configurable para lectura de recibos (Sedapal, Pluz, Cálidda, Internet), distribución porcentual exacta y envío diario a grupos de WhatsApp en la nube gratis.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "daily": "node src/cli/dailyRunner.js",
+    "daily:dry": "node src/cli/dailyRunner.js --dry-run",
+    "daily:demo": "node src/cli/dailyRunner.js --demo",
+    "whatsapp:qr": "node src/cli/linkWhatsapp.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "sedapal",
+    "pluz",
+    "calidda",
+    "internet",
+    "recibos",
+    "whatsapp",
+    "gemini",
+    "github-actions"
+  ],
+  "author": "Diego",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^2.3.0",
+    "@whiskeysockets/baileys": "^6.7.9",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "imapflow": "^1.0.171",
+    "mailparser": "^3.7.2",
+    "multer": "^1.4.5-lts.1",
+    "pino": "^9.6.0",
+    "qrcode": "^1.5.4"
+  }
+}

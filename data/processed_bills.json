@@ -1,0 +1,269 @@
+{
+  "lastRunAt": "2026-10-21T01:57:09.380Z",
+  "bills": [
+    {
+      "id": "bill_1792547829380_fp28v",
+      "fingerprint": "INTERNET::F002-01928374::119.00",
+      "createdAt": "2026-10-21T01:57:09.380Z",
+      "sourceEmailId": "demo-internet-1",
+      "sourceSubject": "Comprobante Electrónico WIN Internet Fibra Óptica",
+      "serviceId": "internet",
+      "serviceCode": "INTERNET",
+      "serviceName": "Internet Fibra (Win / Claro / Movistar)",
+      "serviceIcon": "🌐",
+      "providerName": "Win Internet Fibra",
+      "supplyNumber": "WIN-904512",
+      "invoiceNumber": "F002-01928374",
+      "billingPeriod": "Octubre 2026",
+      "dueDate": "30/10/2026",
+      "dueDateIso": "2026-10-30",
+      "totalAmount": 119,
+      "formattedTotal": "S/ 119.00",
+      "whatsappGroup": {
+        "name": "Grupo Internet Fibra",
+        "jid": "120363000000000003@g.us"
+      },
+      "shares": [
+        {
+          "id": "m1",
+          "name": "Diego (Oficina / Piso 1)",
+          "phone": "51999111222",
+          "percentage": 40,
+          "effectivePercentage": 40,
+          "amountCents": 4760,
+          "amount": 47.6,
+          "formattedAmount": "S/ 47.60"
+        },
+        {
+          "id": "m2",
+          "name": "Carlos (Piso 2)",
+          "phone": "51999333444",
+          "percentage": 30,
+          "effectivePercentage": 30,
+          "amountCents": 3570,
+          "amount": 35.7,
+          "formattedAmount": "S/ 35.70"
+        },
+        {
+          "id": "m3",
+          "name": "Lucía (Piso 3)",
+          "phone": "51999555666",
+          "percentage": 30,
+          "effectivePercentage": 30,
+          "amountCents": 3570,
+          "amount": 35.7,
+          "formattedAmount": "S/ 35.70"
+        }
+      ],
+      "whatsappMessage": "🧾 *NUEVO RECIBO DETECTADO - DISTRIBUCIÓN DE COSTOS*\n🌐 *Internet Fibra (Win / Claro / Movistar)*\n━━━━━━━━━━━━━━━━━━━━━━\n📌 *Suministro / Cliente:* WIN-904512\n🔢 *N° Recibo:* F002-01928374\n🗓️ *Periodo:* Octubre 2026\n📊 *Consumo:* 600 Mbps\n⏳ *Fecha de Vencimiento:* *30/10/2026*\n💰 *TOTAL DEL RECIBO:* *S/ 119.00*\n━━━━━━━━━━━━━━━━━━━━━━\n📐 *DISTRIBUCIÓN POR PORCENTAJE (%):*\n\n🔸 *Diego (Oficina / Piso 1)* (40%): *S/ 47.60*\n🔸 *Carlos (Piso 2)* (30%): *S/ 35.70*\n🔸 *Lucía (Piso 3)* (30%): *S/ 35.70*\n━━━━━━━━━━━━━━━━━━━━━━\n🏦 *MEDIOS DE PAGO:*\n👤 *Titular:* Diego (Administrador)\n📱 *Yape:* 999-888-777\n📲 *Plin:* 999-888-777 (mismo número)\n💳 *Cuenta:* BCP Soles: 191-00000000-0-00\n🏛️ *CCI:* 00219110000000000050\n\n💬 _Por favor enviar la captura del Yape/Plin o transferencia a este mismo grupo para registrarlo. ¡Gracias! 🙌_\n\n🤖 _Generado automáticamente por AutoRecibos AI_",
+      "extractionEngine": "deterministic-peru-parser",
+      "paid": false,
+      "remindersSent": [],
+      "lastDelivery": {
+        "success": true,
+        "dryRun": true,
+        "provider": "dry-run-simulator",
+        "targetJid": "120363000000000003@g.us",
+        "timestamp": "2026-10-21T01:57:09.380Z"
+      }
+    },
+    {
+      "id": "bill_1792547829379_s46vx",
+      "fingerprint": "CALIDDA::B004-04918231::67.50",
+      "createdAt": "2026-10-21T01:57:09.379Z",
+      "sourceEmailId": "demo-calidda-1",
+      "sourceSubject": "Recibo de Gas Natural Cálidda - Facturación Mensual",
+      "serviceId": "calidda",
+      "serviceCode": "CALIDDA",
+      "serviceName": "Cálidda (Gas Natural)",
+      "serviceIcon": "🔥",
+      "providerName": "Cálidda Gas Natural",
+      "supplyNumber": "8841209",
+      "invoiceNumber": "B004-04918231",
+      "billingPeriod": "Octubre 2026",
+      "dueDate": "29/10/2026",
+      "dueDateIso": "2026-10-29",
+      "totalAmount": 67.5,
+      "formattedTotal": "S/ 67.50",
+      "whatsappGroup": {
+        "name": "Grupo Gas Natural Casa",
+        "jid": "120363000000000002@g.us"
+      },
+      "shares": [
+        {
+          "id": "m1",
+          "name": "Piso 1 (Cocina + Terma)",
+          "phone": "51999111222",
+          "percentage": 50,
+          "effectivePercentage": 50,
+          "amountCents": 3375,
+          "amount": 33.75,
+          "formattedAmount": "S/ 33.75"
+        },
+        {
+          "id": "m2",
+          "name": "Piso 2 (Cocina + Terma)",
+          "phone": "51999333444",
+          "percentage": 30,
+          "effectivePercentage": 30,
+          "amountCents": 2025,
+          "amount": 20.25,
+          "formattedAmount": "S/ 20.25"
+        },
+        {
+          "id": "m3",
+          "name": "Piso 3 (Cocina)",
+          "phone": "51999555666",
+          "percentage": 20,
+          "effectivePercentage": 20,
+          "amountCents": 1350,
+          "amount": 13.5,
+          "formattedAmount": "S/ 13.50"
+        }
+      ],
+      "whatsappMessage": "🧾 *NUEVO RECIBO DETECTADO - DISTRIBUCIÓN DE COSTOS*\n🔥 *Cálidda (Gas Natural)*\n━━━━━━━━━━━━━━━━━━━━━━\n📌 *Suministro / Cliente:* 8841209\n🔢 *N° Recibo:* B004-04918231\n🗓️ *Periodo:* Octubre 2026\n📊 *Consumo:* 18 m3\n⏳ *Fecha de Vencimiento:* *29/10/2026*\n💰 *TOTAL DEL RECIBO:* *S/ 67.50*\n━━━━━━━━━━━━━━━━━━━━━━\n📐 *DISTRIBUCIÓN POR PORCENTAJE (%):*\n\n🔸 *Piso 1 (Cocina + Terma)* (50%): *S/ 33.75*\n🔸 *Piso 2 (Cocina + Terma)* (30%): *S/ 20.25*\n🔸 *Piso 3 (Cocina)* (20%): *S/ 13.50*\n━━━━━━━━━━━━━━━━━━━━━━\n🏦 *MEDIOS DE PAGO:*\n👤 *Titular:* Diego (Administrador)\n📱 *Yape:* 999-888-777\n📲 *Plin:* 999-888-777 (mismo número)\n💳 *Cuenta:* BCP Soles: 191-00000000-0-00\n🏛️ *CCI:* 00219110000000000050\n\n💬 _Por favor enviar la captura del Yape/Plin o transferencia a este mismo grupo para registrarlo. ¡Gracias! 🙌_\n\n🤖 _Generado automáticamente por AutoRecibos AI_",
+      "extractionEngine": "deterministic-peru-parser",
+      "paid": false,
+      "remindersSent": [],
+      "lastDelivery": {
+        "success": true,
+        "dryRun": true,
+        "provider": "dry-run-simulator",
+        "targetJid": "120363000000000002@g.us",
+        "timestamp": "2026-10-21T01:57:09.379Z"
+      }
+    },
+    {
+      "id": "bill_1792547829379_57d2w",
+      "fingerprint": "PLUZ::S870-0006250622::324.80",
+      "createdAt": "2026-10-21T01:57:09.379Z",
+      "sourceEmailId": "demo-pluz-1",
+      "sourceSubject": "Tu recibo digital Pluz Energía Perú está disponible",
+      "serviceId": "pluz",
+      "serviceCode": "PLUZ",
+      "serviceName": "Pluz Energía / Luz",
+      "serviceIcon": "⚡",
+      "providerName": "Pluz Energía Perú",
+      "supplyNumber": "1194649",
+      "invoiceNumber": "S870-0006250622",
+      "billingPeriod": "Octubre 2026",
+      "dueDate": "25/10/2026",
+      "dueDateIso": "2026-10-25",
+      "totalAmount": 324.8,
+      "formattedTotal": "S/ 324.80",
+      "whatsappGroup": {
+        "name": "Casa Familiar - Agua y Luz",
+        "jid": "120363000000000001@g.us"
+      },
+      "shares": [
+        {
+          "id": "m1",
+          "name": "Piso 1 (Familia Principal)",
+          "phone": "51999111222",
+          "percentage": 40,
+          "effectivePercentage": 40,
+          "amountCents": 12992,
+          "amount": 129.92,
+          "formattedAmount": "S/ 129.92"
+        },
+        {
+          "id": "m2",
+          "name": "Piso 2 (Departamento A)",
+          "phone": "51999333444",
+          "percentage": 35,
+          "effectivePercentage": 35,
+          "amountCents": 11368,
+          "amount": 113.68,
+          "formattedAmount": "S/ 113.68"
+        },
+        {
+          "id": "m3",
+          "name": "Piso 3 (Departamento B)",
+          "phone": "51999555666",
+          "percentage": 25,
+          "effectivePercentage": 25,
+          "amountCents": 8120,
+          "amount": 81.2,
+          "formattedAmount": "S/ 81.20"
+        }
+      ],
+      "whatsappMessage": "🧾 *NUEVO RECIBO DETECTADO - DISTRIBUCIÓN DE COSTOS*\n⚡ *Pluz Energía / Luz*\n━━━━━━━━━━━━━━━━━━━━━━\n📌 *Suministro / Cliente:* 1194649\n🔢 *N° Recibo:* S870-0006250622\n🗓️ *Periodo:* Octubre 2026\n📊 *Consumo:* 215 kWh\n⏳ *Fecha de Vencimiento:* *25/10/2026*\n💰 *TOTAL DEL RECIBO:* *S/ 324.80*\n━━━━━━━━━━━━━━━━━━━━━━\n📐 *DISTRIBUCIÓN POR PORCENTAJE (%):*\n\n🔸 *Piso 1 (Familia Principal)* (40%): *S/ 129.92*\n🔸 *Piso 2 (Departamento A)* (35%): *S/ 113.68*\n🔸 *Piso 3 (Departamento B)* (25%): *S/ 81.20*\n━━━━━━━━━━━━━━━━━━━━━━\n🏦 *MEDIOS DE PAGO:*\n👤 *Titular:* Diego (Administrador)\n📱 *Yape:* 999-888-777\n📲 *Plin:* 999-888-777 (mismo número)\n💳 *Cuenta:* BCP Soles: 191-00000000-0-00\n🏛️ *CCI:* 00219110000000000050\n\n💬 _Por favor enviar la captura del Yape/Plin o transferencia a este mismo grupo para registrarlo. ¡Gracias! 🙌_\n\n🤖 _Generado automáticamente por AutoRecibos AI_",
+      "extractionEngine": "deterministic-peru-parser",
+      "paid": false,
+      "remindersSent": [],
+      "lastDelivery": {
+        "success": true,
+        "dryRun": true,
+        "provider": "dry-run-simulator",
+        "targetJid": "120363000000000001@g.us",
+        "timestamp": "2026-10-21T01:57:09.379Z"
+      }
+    },
+    {
+      "id": "bill_1792547829378_2k18v",
+      "fingerprint": "SEDAPAL::S001-08492015::148.60",
+      "createdAt": "2026-10-21T01:57:09.378Z",
+      "sourceEmailId": "demo-sedapal-1",
+      "sourceSubject": "Recibo Digital SEDAPAL - Servicio de Agua Potable y Alcantarillado",
+      "serviceId": "sedapal",
+      "serviceCode": "SEDAPAL",
+      "serviceName": "Sedapal (Agua y Alcantarillado)",
+      "serviceIcon": "💧",
+      "providerName": "Sedapal",
+      "supplyNumber": "5028332-4",
+      "invoiceNumber": "S001-08492015",
+      "billingPeriod": "Octubre 2026",
+      "dueDate": "28/10/2026",
+      "dueDateIso": "2026-10-28",
+      "totalAmount": 148.6,
+      "formattedTotal": "S/ 148.60",
+      "whatsappGroup": {
+        "name": "Casa Familiar - Agua y Luz",
+        "jid": "120363000000000001@g.us"
+      },
+      "shares": [
+        {
+          "id": "m1",
+          "name": "Piso 1 (Familia Principal)",
+          "phone": "51999111222",
+          "percentage": 45,
+          "effectivePercentage": 45,
+          "amountCents": 6687,
+          "amount": 66.87,
+          "formattedAmount": "S/ 66.87"
+        },
+        {
+          "id": "m2",
+          "name": "Piso 2 (Departamento A)",
+          "phone": "51999333444",
+          "percentage": 30,
+          "effectivePercentage": 30,
+          "amountCents": 4458,
+          "amount": 44.58,
+          "formattedAmount": "S/ 44.58"
+        },
+        {
+          "id": "m3",
+          "name": "Piso 3 (Departamento B)",
+          "phone": "51999555666",
+          "percentage": 25,
+          "effectivePercentage": 25,
+          "amountCents": 3715,
+          "amount": 37.15,
+          "formattedAmount": "S/ 37.15"
+        }
+      ],
+      "whatsappMessage": "🧾 *NUEVO RECIBO DETECTADO - DISTRIBUCIÓN DE COSTOS*\n💧 *Sedapal (Agua y Alcantarillado)*\n━━━━━━━━━━━━━━━━━━━━━━\n📌 *Suministro / Cliente:* 5028332-4\n🔢 *N° Recibo:* S001-08492015\n🗓️ *Periodo:* Octubre 2026\n📊 *Consumo:* 24 m3\n⏳ *Fecha de Vencimiento:* *28/10/2026*\n💰 *TOTAL DEL RECIBO:* *S/ 148.60*\n━━━━━━━━━━━━━━━━━━━━━━\n📐 *DISTRIBUCIÓN POR PORCENTAJE (%):*\n\n🔸 *Piso 1 (Familia Principal)* (45%): *S/ 66.87*\n🔸 *Piso 2 (Departamento A)* (30%): *S/ 44.58*\n🔸 *Piso 3 (Departamento B)* (25%): *S/ 37.15*\n━━━━━━━━━━━━━━━━━━━━━━\n🏦 *MEDIOS DE PAGO:*\n👤 *Titular:* Diego (Administrador)\n📱 *Yape:* 999-888-777\n📲 *Plin:* 999-888-777 (mismo número)\n💳 *Cuenta:* BCP Soles: 191-00000000-0-00\n🏛️ *CCI:* 00219110000000000050\n\n💬 _Por favor enviar la captura del Yape/Plin o transferencia a este mismo grupo para registrarlo. ¡Gracias! 🙌_\n\n🤖 _Generado automáticamente por AutoRecibos AI_",
+      "extractionEngine": "deterministic-peru-parser",
+      "paid": false,
+      "remindersSent": [],
+      "lastDelivery": {
+        "success": true,
+        "dryRun": true,
+        "provider": "dry-run-simulator",
+        "targetJid": "120363000000000001@g.us",
+        "timestamp": "2026-10-21T01:57:09.378Z"
+      }
+    }
+  ]
+}
