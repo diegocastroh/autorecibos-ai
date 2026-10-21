@@ -1,10 +1,10 @@
 {
-  "lastRunAt": "2026-10-21T01:57:09.380Z",
+  "lastRunAt": "2026-10-21T04:56:53.348Z",
   "bills": [
     {
-      "id": "bill_1792547829380_fp28v",
+      "id": "bill_1792558613348_2d1jw",
       "fingerprint": "INTERNET::F002-01928374::119.00",
-      "createdAt": "2026-10-21T01:57:09.380Z",
+      "createdAt": "2026-10-21T04:56:53.348Z",
       "sourceEmailId": "demo-internet-1",
       "sourceSubject": "Comprobante Electrónico WIN Internet Fibra Óptica",
       "serviceId": "internet",
@@ -64,13 +64,13 @@
         "dryRun": true,
         "provider": "dry-run-simulator",
         "targetJid": "120363000000000003@g.us",
-        "timestamp": "2026-10-21T01:57:09.380Z"
+        "timestamp": "2026-10-21T04:56:53.348Z"
       }
     },
     {
-      "id": "bill_1792547829379_s46vx",
+      "id": "bill_1792558613348_k5rbk",
       "fingerprint": "CALIDDA::B004-04918231::67.50",
-      "createdAt": "2026-10-21T01:57:09.379Z",
+      "createdAt": "2026-10-21T04:56:53.348Z",
       "sourceEmailId": "demo-calidda-1",
       "sourceSubject": "Recibo de Gas Natural Cálidda - Facturación Mensual",
       "serviceId": "calidda",
@@ -130,13 +130,13 @@
         "dryRun": true,
         "provider": "dry-run-simulator",
         "targetJid": "120363000000000002@g.us",
-        "timestamp": "2026-10-21T01:57:09.379Z"
+        "timestamp": "2026-10-21T04:56:53.348Z"
       }
     },
     {
-      "id": "bill_1792547829379_57d2w",
+      "id": "bill_1792558613348_li1jx",
       "fingerprint": "PLUZ::S870-0006250622::324.80",
-      "createdAt": "2026-10-21T01:57:09.379Z",
+      "createdAt": "2026-10-21T04:56:53.348Z",
       "sourceEmailId": "demo-pluz-1",
       "sourceSubject": "Tu recibo digital Pluz Energía Perú está disponible",
       "serviceId": "pluz",
@@ -196,13 +196,13 @@
         "dryRun": true,
         "provider": "dry-run-simulator",
         "targetJid": "120363000000000001@g.us",
-        "timestamp": "2026-10-21T01:57:09.379Z"
+        "timestamp": "2026-10-21T04:56:53.348Z"
       }
     },
     {
-      "id": "bill_1792547829378_2k18v",
+      "id": "bill_1792558613347_k5swv",
       "fingerprint": "SEDAPAL::S001-08492015::148.60",
-      "createdAt": "2026-10-21T01:57:09.378Z",
+      "createdAt": "2026-10-21T04:56:53.347Z",
       "sourceEmailId": "demo-sedapal-1",
       "sourceSubject": "Recibo Digital SEDAPAL - Servicio de Agua Potable y Alcantarillado",
       "serviceId": "sedapal",
@@ -262,7 +262,7 @@
         "dryRun": true,
         "provider": "dry-run-simulator",
         "targetJid": "120363000000000001@g.us",
-        "timestamp": "2026-10-21T01:57:09.378Z"
+        "timestamp": "2026-10-21T04:56:53.347Z"
       }
     }
   ]
