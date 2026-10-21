@@ -12,7 +12,8 @@ import { fileURLToPath } from 'node:url';
 import makeWASocket, {
   useMultiFileAuthState,
   DisconnectReason,
-  fetchLatestBaileysVersion
+  fetchLatestBaileysVersion,
+  Browsers
 } from '@whiskeysockets/baileys';
 import QRCode from 'qrcode';
 import pino from 'pino';
@@ -23,8 +24,9 @@ const ROOT_DIR = path.resolve(__dirname, '..', '..');
 const AUTH_DIR = path.join(ROOT_DIR, 'data', 'whatsapp_auth');
 
 let activeSocket = null;
+let isStartingSession = false;
 let connectionState = {
-  status: 'DISCONNECTED', // DISCONNECTED | CONNECTING | QR_READY | CONNECTED
+  status: 'DISCONNECTED', // DISCONNECTED | CONNECTING | QR_READY | PAIRING | CONNECTED
   qrDataUrl: null,
   qrRaw: null,
   connectedUser: null,
@@ -90,7 +92,7 @@ export function exportAuthStateToBase64() {
 
   const bundle = {};
   for (const file of files) {
-    if (file === 'creds.json' || file.startsWith('app-state-sync-key')) {
+    if (file === 'creds.json' || file.startsWith('app-state-sync-key') || file.startsWith('pre-key')) {
       const fullPath = path.join(AUTH_DIR, file);
       if (fs.statSync(fullPath).isFile()) {
         bundle[file] = fs.readFileSync(fullPath, 'utf-8');
@@ -101,7 +103,14 @@ export function exportAuthStateToBase64() {
 }
 
 export function hasSavedBaileysSession() {
-  return fs.existsSync(path.join(AUTH_DIR, 'creds.json'));
+  const credsPath = path.join(AUTH_DIR, 'creds.json');
+  if (!fs.existsSync(credsPath)) return false;
+  try {
+    const creds = JSON.parse(fs.readFileSync(credsPath, 'utf-8'));
+    return Boolean(creds?.me?.id || creds?.registered);
+  } catch {
+    return false;
+  }
 }
 
 export function getWhatsAppStatus() {
@@ -113,16 +122,36 @@ export function getWhatsAppStatus() {
 
 /**
  * Inicia o reutiliza la conexión con WhatsApp mediante Baileys.
+ * Maneja automáticamente el código 515 (restartRequired tras escanear QR) y limpia sesiones corruptas.
  */
 export async function startBaileysSession(options = {}) {
-  const { waitForOpenMs = 0, onQr = null } = options;
+  const { waitForOpenMs = 0, onQr = null, forceReset = false } = options;
 
-  if (!hasSavedBaileysSession() && process.env.WHATSAPP_SESSION_BASE64) {
+  if (forceReset) {
+    await disconnectWhatsApp(true);
+  }
+
+  if (!hasSavedBaileysSession() && process.env.WHATSAPP_SESSION_BASE64 && !forceReset) {
     restoreAuthStateFromBase64(process.env.WHATSAPP_SESSION_BASE64);
   }
 
-  if (activeSocket && connectionState.status === 'CONNECTED') {
+  if (activeSocket && (connectionState.status === 'CONNECTED' || connectionState.status === 'QR_READY')) {
     return activeSocket;
+  }
+
+  if (isStartingSession && activeSocket) {
+    return activeSocket;
+  }
+
+  isStartingSession = true;
+
+  // Si hay archivos a medio crear sin registrar y se pide nuevo inicio, limpiar para asegurar QR fresco
+  if (!hasSavedBaileysSession() && fs.existsSync(AUTH_DIR) && connectionState.status === 'DISCONNECTED') {
+    try {
+      fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+    } catch {
+      // Ignorar
+    }
   }
 
   if (!fs.existsSync(AUTH_DIR)) {
@@ -138,7 +167,7 @@ export async function startBaileysSession(options = {}) {
     const latest = await fetchLatestBaileysVersion();
     if (latest?.version) version = latest.version;
   } catch {
-    // Usar versión por defecto si no hay acceso al endpoint de versión
+    // Usar versión por defecto si falla la consulta
   }
 
   const sock = makeWASocket({
@@ -146,11 +175,13 @@ export async function startBaileysSession(options = {}) {
     auth: state,
     printQRInTerminal: false,
     logger: pino({ level: 'silent' }),
-    browser: ['AutoRecibos AI', 'Chrome', '1.0.0'],
-    syncFullHistory: false
+    browser: Browsers.ubuntu('Chrome'),
+    syncFullHistory: false,
+    markOnlineOnConnect: false
   });
 
   activeSocket = sock;
+  isStartingSession = false;
 
   sock.ev.on('creds.update', saveCreds);
 
@@ -173,6 +204,7 @@ export async function startBaileysSession(options = {}) {
       if (qr) {
         connectionState.status = 'QR_READY';
         connectionState.qrRaw = qr;
+        connectionState.lastError = null;
         try {
           connectionState.qrDataUrl = await QRCode.toDataURL(qr, { margin: 2, width: 280 });
         } catch {
@@ -187,12 +219,12 @@ export async function startBaileysSession(options = {}) {
         connectionState.status = 'CONNECTED';
         connectionState.qrDataUrl = null;
         connectionState.qrRaw = null;
+        connectionState.lastError = null;
         connectionState.connectedUser = {
           id: sock.user?.id || '',
           name: sock.user?.name || 'Número Vinculado'
         };
 
-        // Cargar lista de grupos disponibles
         try {
           const groupsObj = await sock.groupFetchAllParticipating();
           connectionState.groupsCache = Object.values(groupsObj || {}).map((g) => ({
@@ -201,7 +233,7 @@ export async function startBaileysSession(options = {}) {
             participantsCount: Array.isArray(g.participants) ? g.participants.length : 0
           }));
         } catch {
-          // Ignorar si falla la carga inicial de grupos
+          // Ignorar si tarda en sincronizar grupos
         }
 
         if (!settled) {
@@ -213,27 +245,49 @@ export async function startBaileysSession(options = {}) {
 
       if (connection === 'close') {
         const statusCode = lastDisconnect?.error?.output?.statusCode;
-        const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
-        connectionState.status = 'DISCONNECTED';
-        connectionState.qrDataUrl = null;
-        activeSocket = null;
+        const isLoggedOut = statusCode === DisconnectReason.loggedOut || statusCode === 401;
+        const isRestartRequired =
+          statusCode === DisconnectReason.restartRequired || statusCode === 515;
 
-        if (statusCode === DisconnectReason.loggedOut) {
+        activeSocket = null;
+        connectionState.qrDataUrl = null;
+        connectionState.qrRaw = null;
+
+        if (isLoggedOut) {
+          connectionState.status = 'DISCONNECTED';
           connectionState.connectedUser = null;
-          connectionState.lastError = 'Sesión cerrada desde el teléfono.';
-        } else {
-          connectionState.lastError = `Conexión cerrada (código ${statusCode || 'desconocido'}).`;
+          connectionState.lastError = 'Sesión cerrada o expirada. Haz clic en Generar QR para vincular de nuevo.';
+          try {
+            fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+          } catch {
+            // Ignorar
+          }
+          if (!settled) {
+            settled = true;
+            if (timeoutId) clearTimeout(timeoutId);
+            reject(new Error(connectionState.lastError));
+          }
+          return;
         }
 
-        if (!settled) {
-          settled = true;
-          if (timeoutId) clearTimeout(timeoutId);
-          reject(new Error(connectionState.lastError));
-        } else if (shouldReconnect && waitForOpenMs === 0) {
-          // Reconexión automática en modo servidor web
+        // Tras escanear el QR, WhatsApp envía código 515 (restartRequired) para reconectar ya autenticado
+        if (isRestartRequired || statusCode !== DisconnectReason.loggedOut) {
+          connectionState.status = isRestartRequired ? 'PAIRING' : 'CONNECTING';
+          connectionState.lastError = isRestartRequired
+            ? 'Completando vinculación tras escaneo de QR...'
+            : `Reconectando a WhatsApp (código ${statusCode || 'red'})...`;
+
           setTimeout(() => {
-            startBaileysSession().catch(() => {});
-          }, 4000);
+            startBaileysSession({ waitForOpenMs: 0, onQr })
+              .then((newSock) => {
+                if (!settled) {
+                  settled = true;
+                  if (timeoutId) clearTimeout(timeoutId);
+                  resolve(newSock);
+                }
+              })
+              .catch(() => {});
+          }, isRestartRequired ? 800 : 2500);
         }
       }
     });
@@ -243,7 +297,6 @@ export async function startBaileysSession(options = {}) {
     return openPromise;
   }
 
-  // En modo servidor web, no bloquear el arranque esperando el escaneo QR
   openPromise.catch(() => {});
   return sock;
 }
@@ -264,8 +317,13 @@ export async function disconnectWhatsApp(logout = false) {
     }
     activeSocket = null;
   }
+  isStartingSession = false;
   if (logout && fs.existsSync(AUTH_DIR)) {
-    fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+    try {
+      fs.rmSync(AUTH_DIR, { recursive: true, force: true });
+    } catch {
+      // Ignorar
+    }
   }
   connectionState = {
     status: 'DISCONNECTED',

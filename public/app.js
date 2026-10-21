@@ -922,11 +922,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const waDialog = document.getElementById('whatsappDialog');
-  document.getElementById('btnOpenWhatsappModal').addEventListener('click', () => {
+  document.getElementById('btnOpenWhatsappModal').addEventListener('click', async () => {
     waDialog.showModal();
     if (!isCloudStaticMode) {
-      refreshWaModalStatus();
-      waPollInterval = setInterval(refreshWaModalStatus, 2500);
+      await refreshWaModalStatus(true);
+      if (waPollInterval) clearInterval(waPollInterval);
+      waPollInterval = setInterval(() => refreshWaModalStatus(false), 2500);
     } else {
       document.getElementById('waModalStateText').textContent =
         'Modo Nube (Ejecuta npm start en local para escanear QR o usa Green-API en la nube)';
@@ -951,9 +952,20 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('💡 Para vincular el QR de Baileys por primera vez, usa http://localhost:3080 o elige Green-API.');
       return;
     }
-    document.getElementById('waModalStateText').textContent = 'Generando código QR...';
-    await fetch('./api/whatsapp/connect', { method: 'POST' });
-    setTimeout(refreshWaModalStatus, 1200);
+    try {
+      document.getElementById('waModalStateText').textContent = 'Generando nuevo código QR...';
+      const res = await fetch('./api/whatsapp/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ forceReset: true })
+      });
+      if (res.ok) {
+        const st = await res.json();
+        applyWaModalStatus(st);
+      }
+    } catch {
+      showToast('⚠️ El servidor local (localhost:3080) no responde. Verificando proceso...');
+    }
   });
 
   document.getElementById('btnLogoutWa').addEventListener('click', async () => {
@@ -1055,26 +1067,52 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-async function refreshWaModalStatus() {
+function applyWaModalStatus(st) {
+  if (!st) return;
+  updateWhatsAppHeaderStatus(st);
+
+  const stateText = document.getElementById('waModalStateText');
+  const qrContainer = document.getElementById('waQrContainer');
+  const qrImg = document.getElementById('waQrImg');
+
+  const statusLabels = {
+    DISCONNECTED: 'Desconectado',
+    CONNECTING: 'Conectando con WhatsApp...',
+    QR_READY: '📲 Listo para escanear QR con tu celular',
+    PAIRING: '🔄 Vinculando tu número de WhatsApp...',
+    CONNECTED: `✅ Conectado (${st.connectedUser?.name || st.connectedUser?.id || 'Activo'})`
+  };
+
+  stateText.textContent = statusLabels[st.status] || st.status;
+  if (st.status === 'QR_READY' && st.qrDataUrl) {
+    qrContainer.style.display = 'block';
+    qrImg.src = st.qrDataUrl;
+  } else {
+    qrContainer.style.display = 'none';
+  }
+
+  if (Array.isArray(st.groupsCache) && st.groupsCache.length > 0) {
+    renderWaGroupsList(st.groupsCache);
+  }
+}
+
+async function refreshWaModalStatus(autoStartIfDisconnected = false) {
   try {
     const res = await fetch('./api/whatsapp/status');
+    if (!res.ok) return;
     const st = await res.json();
-    updateWhatsAppHeaderStatus(st);
+    applyWaModalStatus(st);
 
-    const stateText = document.getElementById('waModalStateText');
-    const qrContainer = document.getElementById('waQrContainer');
-    const qrImg = document.getElementById('waQrImg');
-
-    stateText.textContent = st.status;
-    if (st.status === 'QR_READY' && st.qrDataUrl) {
-      qrContainer.style.display = 'block';
-      qrImg.src = st.qrDataUrl;
-    } else {
-      qrContainer.style.display = 'none';
-    }
-
-    if (Array.isArray(st.groupsCache) && st.groupsCache.length > 0) {
-      renderWaGroupsList(st.groupsCache);
+    if (autoStartIfDisconnected && st.status === 'DISCONNECTED') {
+      document.getElementById('waModalStateText').textContent = 'Generando código QR...';
+      const connRes = await fetch('./api/whatsapp/connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ forceReset: false })
+      });
+      if (connRes.ok) {
+        applyWaModalStatus(await connRes.json());
+      }
     }
   } catch {
     // Ignorar errores de red temporales

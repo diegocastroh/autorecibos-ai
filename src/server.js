@@ -208,7 +208,19 @@ app.get('/api/whatsapp/status', (req, res) => {
 
 app.post('/api/whatsapp/connect', async (req, res) => {
   try {
-    await startBaileysSession({ waitForOpenMs: 0 });
+    const forceReset = Boolean(req.body?.forceReset);
+    await startBaileysSession({ waitForOpenMs: 0, forceReset });
+
+    // Esperar hasta 5 segundos a que el QR esté listo o la sesión conecte
+    const start = Date.now();
+    while (Date.now() - start < 5000) {
+      const st = getWhatsAppStatus();
+      if (st.qrDataUrl || st.status === 'CONNECTED') {
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 250));
+    }
+
     res.json(getWhatsAppStatus());
   } catch (err) {
     res.status(500).json({ error: err.message });
